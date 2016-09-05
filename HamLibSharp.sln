@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamLibSharp", "HamLibSharp.csproj", "{878402CD-1AF7-443F-980F-861FF9E840CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamLibSharpTest", "HamLibSharpTest\HamLibSharpTest.csproj", "{C75006E1-1D7A-4880-95F8-A968B4A71741}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RigCaps", "RigCaps\RigCaps.csproj", "{04C50C92-9170-4BF9-AC4C-3A8264BF7762}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04C50C92-9170-4BF9-AC4C-3A8264BF7762}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04C50C92-9170-4BF9-AC4C-3A8264BF7762}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04C50C92-9170-4BF9-AC4C-3A8264BF7762}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04C50C92-9170-4BF9-AC4C-3A8264BF7762}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878402CD-1AF7-443F-980F-861FF9E840CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878402CD-1AF7-443F-980F-861FF9E840CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878402CD-1AF7-443F-980F-861FF9E840CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878402CD-1AF7-443F-980F-861FF9E840CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C75006E1-1D7A-4880-95F8-A968B4A71741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C75006E1-1D7A-4880-95F8-A968B4A71741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C75006E1-1D7A-4880-95F8-A968B4A71741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C75006E1-1D7A-4880-95F8-A968B4A71741}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.StandardHeader = $1
+		$1.Text = @\n ${FileName}\n \n Author:\n      ${AuthorName} <${AuthorEmail}>\n\n Copyright (c) ${Year} ${CopyrightHolder}\n\n This library is free software; you can redistribute it and/or modify\n it under the terms of the GNU Lesser General Public License as\n published by the Free Software Foundation; either version 2.1 of the\n License, or (at your option) any later version.\n\n This library is distributed in the hope that it will be useful, but\n WITHOUT ANY WARRANTY; without even the implied warranty of\n MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU\n Lesser General Public License for more details.\n\n You should have received a copy of the GNU Lesser General Public\n License along with this library; if not, write to the Free Software\n Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+		$1.IncludeInNewFiles = True
+	EndGlobalSection
+EndGlobal
