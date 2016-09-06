@@ -65,11 +65,11 @@ namespace HamLibSharp
 		internal ChannelList[] chan_list;
 
 		/// max absolute
-		internal int max_rit;
+		internal Long max_rit;
 		/// max absolute XIT
-		internal int max_xit;
+		internal Long max_xit;
 		/// max absolute IF-SHIFT
-		internal int max_ifshift;
+		internal Long max_ifshift;
 
 		/// Announces bit field list
 		internal RigAnnounce announces;
@@ -83,17 +83,17 @@ namespace HamLibSharp
 		internal int[] attenuator;
 
 		// List of get functions
-		internal uint has_get_func;
+		internal ULong has_get_func;
 		// List of set functions
-		internal uint has_set_func;
+		internal ULong has_set_func;
 		// List of get level
-		internal uint has_get_level;
+		internal ULong has_get_level;
 		// List of set level
-		internal uint has_set_level;
+		internal ULong has_set_level;
 		// List of get parm
-		internal uint has_get_parm;
+		internal ULong has_get_parm;
 		// List of set parm
-		internal uint has_set_parm;
+		internal ULong has_set_parm;
 
 		// level granularity (i.e. steps)
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.RIG_SETTING_MAX)]
@@ -126,7 +126,7 @@ namespace HamLibSharp
 		/// Mode currently set
 		RigMode current_mode;
 		/// Passband width currently set
-		internal int current_width;
+		internal Long current_width;
 		/// Tx VFO currently set
 		internal int tx_vfo;
 		/// Complete list of modes for this rig

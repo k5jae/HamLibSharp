@@ -82,7 +82,7 @@ namespace HamLibSharp
 	[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 	public class ConfigurationParameter
 	{
-		public int Token { get { return token; } }
+		public int Token { get { return token.Val; } }
 
 		public string Name { get { return name; } }
 
@@ -99,7 +99,7 @@ namespace HamLibSharp
 		public float Step { get { return step; } }
 
 		/*!< Conf param token ID */
-		int token;
+		Long token;
 		/*!< Param name, no spaces allowed */
 		[MarshalAs (UnmanagedType.LPStr)]
 		string name;
@@ -195,14 +195,14 @@ namespace HamLibSharp
 	{
 		public RigMode Modes { get { return modes; } }
 
-		public int Step { get { return ts; } }
+		public int Step { get { return ts.Val; } }
 
 		public const int Any = 0;
 
 		// Bit field of RIG_MODE's
 		RigMode modes;
 		// Tuning step in Hz
-		int ts;
+		Long ts;
 	};
 
 
@@ -233,14 +233,14 @@ namespace HamLibSharp
 	{
 		public RigMode Modes { get { return modes; } }
 
-		public int Width { get { return width; } }
+		public int Width { get { return width.Val; } }
 
 		public const int Any = 0;
 
 		// Bit field of RIG_MODE's
 		RigMode modes;
 		// Passband width in Hz
-		int width;
+		Long width;
 	};
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -307,13 +307,13 @@ namespace HamLibSharp
 		public bool  Xit{ get { return ((byte)((raw0 >> 15) & 0x01)) != 0; } }
 
 		// Function status
-		uint funcs;
+		ULong funcs;
 		// Level values
-		uint levels;
+		ULong levels;
 
-		public uint Functions { get { return funcs; } }
+		public uint Functions { get { return funcs.Val; } }
 
-		public uint Levels { get { return levels; } }
+		public uint Levels { get { return levels.Val; } }
 
 
 		private short raw2;
@@ -356,4 +356,34 @@ namespace HamLibSharp
 		// table of plots
 	TableDef[] table = new CalibrationTable.TableDef[Rig.MAX_CAL_LENGTH];
 	};
+
+	[StructLayout (LayoutKind.Sequential)]
+	public struct Long
+	{
+		IntPtr val;
+
+		public int Val {
+			get {
+				return val.ToInt32 ();
+			}
+			set {
+				val = new IntPtr (value);
+			}
+		}
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
+	public struct ULong
+	{
+		IntPtr val;
+
+		public uint Val {
+			get {
+				return (uint)val.ToInt32 ();
+			}
+			set {
+				val = new IntPtr (value);
+			}
+		}
+	}
 }

@@ -273,7 +273,7 @@ namespace HamLibSharp
 			get {
 				StringBuilder sb = new StringBuilder (255);
 				for (int i = 0; i < Rig.RIG_SETTING_MAX; i++) {
-					sb.Append (Rig.FuncToString (rigCapsNative.has_get_func & Rig.rig_idx2setting (i)) + " ");
+					sb.Append (Rig.FuncToString (rigCapsNative.has_get_func.Val & Rig.rig_idx2setting (i)) + " ");
 				}
 
 				return sb.ToString ();
@@ -284,7 +284,7 @@ namespace HamLibSharp
 			get {
 				StringBuilder sb = new StringBuilder (255);
 				for (int i = 0; i < Rig.RIG_SETTING_MAX; i++) {
-					sb.Append (Rig.FuncToString (rigCapsNative.has_set_func & Rig.rig_idx2setting (i)) + " ");
+					sb.Append (Rig.FuncToString (rigCapsNative.has_set_func.Val & Rig.rig_idx2setting (i)) + " ");
 				}
 
 				return sb.ToString ();
@@ -295,7 +295,7 @@ namespace HamLibSharp
 			get {
 				StringBuilder sb = new StringBuilder (255);
 				for (int i = 0; i < Rig.RIG_SETTING_MAX; i++) {
-					sb.Append (Rig.LevelToString (rigCapsNative.has_get_level & Rig.rig_idx2setting (i)) + " ");
+					sb.Append (Rig.LevelToString (rigCapsNative.has_get_level.Val & Rig.rig_idx2setting (i)) + " ");
 				}
 
 				return sb.ToString ();
@@ -306,7 +306,7 @@ namespace HamLibSharp
 			get {
 				StringBuilder sb = new StringBuilder (255);
 				for (int i = 0; i < Rig.RIG_SETTING_MAX; i++) {
-					sb.Append (Rig.LevelToString (rigCapsNative.has_set_level & Rig.rig_idx2setting (i)) + " ");
+					sb.Append (Rig.LevelToString (rigCapsNative.has_set_level.Val & Rig.rig_idx2setting (i)) + " ");
 				}
 
 				return sb.ToString ();
@@ -317,7 +317,7 @@ namespace HamLibSharp
 			get {
 				StringBuilder sb = new StringBuilder (255);
 				for (int i = 0; i < Rig.RIG_SETTING_MAX; i++) {
-					sb.Append (Rig.ParmToString (rigCapsNative.has_get_parm & Rig.rig_idx2setting (i)) + " ");
+					sb.Append (Rig.ParmToString (rigCapsNative.has_get_parm.Val & Rig.rig_idx2setting (i)) + " ");
 				}
 
 				return sb.ToString ();
@@ -328,7 +328,7 @@ namespace HamLibSharp
 			get {
 				StringBuilder sb = new StringBuilder (255);
 				for (int i = 0; i < Rig.RIG_SETTING_MAX; i++) {
-					sb.Append (Rig.ParmToString (rigCapsNative.has_set_parm & Rig.rig_idx2setting (i)) + " ");
+					sb.Append (Rig.ParmToString (rigCapsNative.has_set_parm.Val & Rig.rig_idx2setting (i)) + " ");
 				}
 
 				return sb.ToString ();
@@ -385,19 +385,19 @@ namespace HamLibSharp
 
 		public int MaxRit {
 			get {
-				return rigCapsNative.max_rit;
+				return rigCapsNative.max_rit.Val;
 			}
 		}
 
 		public int MaxXit {
 			get {
-				return rigCapsNative.max_xit;
+				return rigCapsNative.max_xit.Val;
 			}
 		}
 
 		public int MaxIfshift {
 			get {
-				return rigCapsNative.max_ifshift;
+				return rigCapsNative.max_ifshift.Val;
 			}
 		}
 

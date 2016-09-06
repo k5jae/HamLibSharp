@@ -85,27 +85,25 @@ namespace HamLibSharp
 		internal int retry;
 
 		// List of get functions
-		internal uint has_get_func;
+		internal ULong has_get_func;
 		// List of set functions
-		internal uint has_set_func;
+		internal ULong has_set_func;
 		// List of get level
-		internal uint has_get_level;
+		internal ULong has_get_level;
 		// List of set level
-		internal uint has_set_level;
+		internal ULong has_set_level;
 		// List of get parm
-		internal uint has_get_parm;
+		internal ULong has_get_parm;
 		// List of set parm
-		internal uint has_set_parm;
+		internal ULong has_set_parm;
 
 		// level granularity (i.e. steps)
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.RIG_SETTING_MAX)]
 		internal Granularity[] level_gran;
-// = new Granularity[Rig.RIG_SETTING_MAX];
 
 		// parm granularity (i.e. steps)
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.RIG_SETTING_MAX)]
 		internal Granularity[] parm_gran;
-// = new Granularity[Rig.RIG_SETTING_MAX];
 
 		// Extension parm list, \sa ext.c
 
@@ -123,19 +121,17 @@ namespace HamLibSharp
 		// Preamp list in dB, 0 terminated
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = Rig.MAXDBLSTSIZ)]
 		internal int[] preamp;
-// = new int[Rig.MAXDBLSTSIZ];
 
 		// Preamp list in dB, 0 terminated
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = Rig.MAXDBLSTSIZ)]
 		internal int[] attenuator;
-// = new int[Rig.MAXDBLSTSIZ];
 
 		// max absolute RIT
-		internal int max_rit;
+		internal Long max_rit;
 		// max absolute XIT
-		internal int max_xit;
+		internal Long max_xit;
 		// max absolute IF-SHIFT
-		internal int max_ifshift;
+		internal Long max_ifshift;
 
 		// Announces bit field list
 		internal RigAnnounce announces;
@@ -157,33 +153,30 @@ namespace HamLibSharp
 		// Channel list, zero ended
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.CHANLSTSIZ)]
 		internal ChannelList[] chan_list;
-// = new ChannelList[Rig.CHANLSTSIZ];
 
 		// Receive frequency range list for ITU region 1
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.FRQRANGESIZ)]
 		internal FrequencyRange[] rx_range_list1;
-// = new FrequencyRange[Rig.FRQRANGESIZ];
+
 		// Transmit frequency range list for ITU region 1
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.FRQRANGESIZ)]
 		internal FrequencyRange[] tx_range_list1;
-// = new FrequencyRange[Rig.FRQRANGESIZ];
+
 		// Receive frequency range list for ITU region 2
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.FRQRANGESIZ)]
 		internal FrequencyRange[] rx_range_list2;
-// = new FrequencyRange[Rig.FRQRANGESIZ];
+
 		// Transmit frequency range list for ITU region 2
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.FRQRANGESIZ)]
 		internal FrequencyRange[] tx_range_list2;
-// = new FrequencyRange[Rig.FRQRANGESIZ];
 
 		// Tuning step list
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.TSLSTSIZ)]
 		internal TuningStep[] tuning_steps;
-// = new TuningStep[Rig.TSLSTSIZ];
+
 		// mode/filter table, at -6dB
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.FLTLSTSIZ)]
 		internal FilterList[] filters_list;
-// = new FilterList[Rig.FLTLSTSIZ];
 
 		// S-meter calibration table
 		internal CalibrationTable str_cal;

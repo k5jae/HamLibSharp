@@ -3,8 +3,7 @@ Mono/.NET Binding for the Ham Radio Control Libraries (https://sourceforge.net/p
 
 The goal of this binding is to support desktop platforms HamLib supports. Currently tested against Linux (Ubuntu 16.04).
 
-This binding is currently work-in-progress. And requires the fork of HamLib with small patches used by Binding:
-git clone git://git.code.sf.net/u/jaebird/hamlib u-jaebird-hamlib
+This binding is currently work-in-progress and it should work with most versions of HamLib distros since 1.2, most testing is being done with ~3.1.
 
 What has been tested:
 Rig VFO Frequency adjustments (both read and write)
