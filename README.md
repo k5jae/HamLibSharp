@@ -1,9 +1,9 @@
 # HamLibSharp
 Mono/.NET Binding for the Ham Radio Control Libraries (https://sourceforge.net/p/hamlib/wiki/Hamlib/)
 
-The goal of this binding is to support desktop platforms HamLib supports. Currently tested against Linux (Ubuntu 16.04).
+The goal of this binding is to support desktop platforms HamLib supports. Currently tested with Linux (Ubuntu 16.04) on both 64 and 32 bit architectures.
 
-This binding is currently work-in-progress and it should work with most versions of HamLib distros since 1.2, most testing is being done with ~3.1.
+This binding is a work-in-progress and currently targets HamLib git (3.1). It can be made to work with earlier versions of HamLib with little effort (some ABI changes with rig_caps).
 
 What has been tested:
 * Rig VFO Frequency adjustments (both read and write)
