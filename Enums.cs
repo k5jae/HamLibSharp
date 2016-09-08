@@ -639,4 +639,9 @@ namespace HamLibSharp
 		Rig = 1,
 		Poll = 2,
 	}
+
+	public static class ModeValue
+	{
+		public const int Any = 0;
+	}
 }

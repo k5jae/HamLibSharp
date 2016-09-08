@@ -29,6 +29,9 @@ namespace HamLibSharp
 {
 	public static class HamLib
 	{
+		internal readonly static bool bitsize64;
+		internal readonly static bool isWindows;
+
 		public static bool Initialized { get; private set; }
 
 		public readonly static SortedDictionary<string, RigCaps> Rigs = new SortedDictionary<string, RigCaps> ();
@@ -40,6 +43,15 @@ namespace HamLibSharp
 
 		static HamLib ()
 		{
+			// determine platform and bit size...
+			if (Marshal.SizeOf<IntPtr>() == 8) {
+				bitsize64 = true;
+			}
+
+			if (System.Environment.OSVersion.Platform != PlatformID.MacOSX && System.Environment.OSVersion.Platform != PlatformID.Unix) {
+				isWindows = true;
+			}
+
 			// take care of 32/64 bit native windows dll
 			Library.LoadLibrary (dllName);
 		}
@@ -50,8 +62,16 @@ namespace HamLibSharp
 			var result = rig_load_all_backends ();
 
 			rig_list_foreach ((rig_caps, rig_ptr) => {
-				var caps = Marshal.PtrToStructure<RigCapsNative> (rig_caps);
-				AddRig (new RigCaps (caps, IntPtr.Zero));
+				IRigCapsNative caps = null;
+
+				// if the platform is 64-bit, but not windows
+				if (!isWindows && bitsize64) {
+					caps = Marshal.PtrToStructure<RigCapsNative64> (rig_caps);
+				} else {
+					caps = Marshal.PtrToStructure<RigCapsNative32> (rig_caps);
+				}
+
+				AddRig (new RigCaps (caps));
 				return 1;
 			}, IntPtr.Zero);
 

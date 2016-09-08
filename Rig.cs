@@ -28,6 +28,13 @@ using System.Runtime.InteropServices;
 
 namespace HamLibSharp
 {
+	internal interface INativeRig
+	{
+		IntPtr Caps { get; }
+		IRigStateNative State { get; }
+		IntPtr Callbacks { get; }
+	};
+
 	public partial class Rig : IDisposable
 	{
 		const int CommErrors = 10;
@@ -36,27 +43,8 @@ namespace HamLibSharp
 		const string ConfTokenDevice = "rig_pathname";
 		const string ConfTokenSerialSpeed = "serial_speed";
 
-
-		[StructLayout (LayoutKind.Sequential)]
-		internal class NativeRig
-		{
-			/// <summary>
-			/// Pointer to rig capabilities (read only)
-			/// </summary>
-			public IntPtr caps;
-			/// <summary>
-			/// Rig state
-			/// </summary>
-			[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
-			public RigStateNative state;
-			/// <summary>
-			/// Registered event callbacks
-			/// </summary>
-			public IntPtr callbacks;
-		};
-
 		IntPtr theRig;
-		NativeRig nativeRig;
+		INativeRig nativeRig;
 		RigCaps rigCaps;
 
 		public RigCaps Caps { get { return rigCaps; } }
@@ -237,13 +225,13 @@ namespace HamLibSharp
 
 		public RigMode ModeList {
 			get {
-				return nativeRig.state.mode_list;
+				return nativeRig.State.Mode_list;
 			}
 		}
 
 		public int VfoList {
 			get {
-				return nativeRig.state.vfo_list;
+				return nativeRig.State.Vfo_list;
 			}
 		}
 
@@ -292,9 +280,27 @@ namespace HamLibSharp
 			if (theRig == IntPtr.Zero)
 				throw new RigException ("Rig initialization error");
 
-			nativeRig = Marshal.PtrToStructure<NativeRig> (theRig);
-			var rigCapsNative = Marshal.PtrToStructure<RigCapsNative> (nativeRig.caps);
-			rigCaps = new RigCaps (rigCapsNative, theRig);
+
+			IRigCapsNative caps = null;
+
+			// if the platform is 64-bit, but not windows
+			if (!HamLib.isWindows && HamLib.bitsize64) {
+				nativeRig = Marshal.PtrToStructure<NativeRig64> (theRig);
+				caps = Marshal.PtrToStructure<RigCapsNative64> (nativeRig.Caps);
+			} else {
+				nativeRig = Marshal.PtrToStructure<NativeRig32> (theRig);
+				caps = Marshal.PtrToStructure<RigCapsNative32> (nativeRig.Caps);
+			}
+
+			rigCaps = new RigCaps (caps, this);
+
+			// test...
+			//Console.WriteLine("TEST>>>>>>");
+			//Console.WriteLine (nativeRig.State.Itu_region);
+			//Console.WriteLine ("HamLibPortNative: {0}", Marshal.SizeOf<HamLibPortNative> ());
+
+			// end test....
+
 		}
 
 		private static int OnFrequency (IntPtr theRig, int vfo, double freq, IntPtr rig_ptr)
@@ -1881,5 +1887,30 @@ namespace HamLibSharp
 
 			return string.Format ("{0} {1}", f, hz);
 		}
+
+		internal IConfigurationParameter[] GetExtParm (IntPtr ptr)
+		{
+			List<IConfigurationParameter> cparams = new List<IConfigurationParameter> ();
+			Rig.rig_ext_parm_foreach (theRig, (rig, confPtr, rig_ptr) => {
+				var conf = confparam_marshal (confPtr);
+				cparams.Add (conf);
+				return 1;
+			}, IntPtr.Zero);
+
+			return cparams.ToArray ();
+		}
+
+		internal IConfigurationParameter[] GetExtLevels (IntPtr ptr)
+		{
+			List<IConfigurationParameter> cparams = new List<IConfigurationParameter> ();
+			Rig.rig_ext_level_foreach (theRig, (rig, confPtr, rig_ptr) => {
+				var conf = confparam_marshal (confPtr);
+				cparams.Add (conf);
+				return 1;
+			}, IntPtr.Zero);
+
+			return cparams.ToArray ();
+		}
+
 	}
 }

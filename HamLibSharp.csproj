@@ -39,13 +39,19 @@
     <Compile Include="Rig.cs" />
     <Compile Include="RigException.cs" />
     <Compile Include="RigNative.cs" />
-    <Compile Include="RigCapsNative.cs" />
     <Compile Include="RigCaps.cs" />
     <Compile Include="Utils\IntPtrExtensions.cs" />
     <Compile Include="Structs.cs" />
-    <Compile Include="RigStateNative.cs" />
     <Compile Include="HamLibPortNative.cs" />
     <Compile Include="RigVfo.cs" />
+    <Compile Include="RigCapsNative32.cs" />
+    <Compile Include="RigCapsNative64.cs" />
+    <Compile Include="RigStateNative32.cs" />
+    <Compile Include="RigStateNative64.cs" />
+    <Compile Include="Utils\CastedList.cs" />
+    <Compile Include="IRigCapsNative.cs" />
+    <Compile Include="IRigStateNative.cs" />
+    <Compile Include="Interfaces.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

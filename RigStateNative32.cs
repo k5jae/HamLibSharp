@@ -21,14 +21,36 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace HamLibSharp
 {
-	// TODO: Primary interest is to get the vfo_list and mode_list. Everything else untested.
+	[StructLayout (LayoutKind.Sequential)]
+	internal class NativeRig32 : INativeRig
+	{
+		/// <summary>
+		/// Pointer to rig capabilities (read only)
+		/// </summary>
+		private IntPtr caps;
+		/// <summary>
+		/// Rig state
+		/// </summary>
+		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
+		private RigStateNative32 state;
+		/// <summary>
+		/// Registered event callbacks
+		/// </summary>
+		private IntPtr callbacks;
 
+		public IntPtr Caps { get { return caps; } }
+		public IRigStateNative State { get { return state; } }
+		public IntPtr Callbacks { get { return callbacks; } }
+	};
+
+	// TODO: Primary interest is to get the vfo_list and mode_list. Everything else untested.
 	[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-	public struct RigStateNative
+	internal struct RigStateNative32 : IRigStateNative
 	{
 		//		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
 		//		HamLibCommPortNative port;	/// Rig port (internal use).
@@ -53,23 +75,23 @@ namespace HamLibSharp
 
 		// Tuning step list
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.TSLSTSIZ)]
-		internal TuningStep[] tuning_steps;
+		internal ModeValue32[] tuning_steps;
 
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.FLTLSTSIZ)]
-		internal FilterList[] filters;
+		internal ModeValue32[] filters;
 
 		// S-meter calibration table
 		internal CalibrationTable str_cal;
 
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.CHANLSTSIZ)]
-		internal ChannelList[] chan_list;
+		internal ChannelList32[] chan_list;
 
 		/// max absolute
-		internal Long max_rit;
+		internal int max_rit;
 		/// max absolute XIT
-		internal Long max_xit;
+		internal int max_xit;
 		/// max absolute IF-SHIFT
-		internal Long max_ifshift;
+		internal int max_ifshift;
 
 		/// Announces bit field list
 		internal RigAnnounce announces;
@@ -83,17 +105,17 @@ namespace HamLibSharp
 		internal int[] attenuator;
 
 		// List of get functions
-		internal ULong has_get_func;
+		internal uint has_get_func;
 		// List of set functions
-		internal ULong has_set_func;
+		internal uint has_set_func;
 		// List of get level
-		internal ULong has_get_level;
+		internal uint has_get_level;
 		// List of set level
-		internal ULong has_set_level;
+		internal uint has_set_level;
 		// List of get parm
-		internal ULong has_get_parm;
+		internal uint has_get_parm;
 		// List of set parm
-		internal ULong has_set_parm;
+		internal uint has_set_parm;
 
 		// level granularity (i.e. steps)
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.RIG_SETTING_MAX)]
@@ -126,10 +148,49 @@ namespace HamLibSharp
 		/// Mode currently set
 		RigMode current_mode;
 		/// Passband width currently set
-		internal Long current_width;
+		internal int current_width;
 		/// Tx VFO currently set
 		internal int tx_vfo;
 		/// Complete list of modes for this rig
 		internal RigMode mode_list;
+
+		// interface properties
+
+		public HamLibPortNative[] Ptt_dcd_ports { get { return ptt_dcd_ports; } }
+		public double Vfo_comp { get { return vfo_comp; } }
+		public int Itu_region { get { return itu_region; } }
+		public FrequencyRange[] Rx_range_list { get { return rx_range_list; } }
+		public FrequencyRange[] Tx_range_list { get { return tx_range_list; } }
+		public IList<IModeValue> Tuning_steps { get { return tuning_steps.CastList<ModeValue32, IModeValue>(); } }
+		public IList<IModeValue> Filters { get { return filters.CastList<ModeValue32, IModeValue>(); } }
+		public CalibrationTable Str_cal { get { return str_cal; } }
+		public IList<IChannelList> Chan_list { get { return chan_list.CastList<ChannelList32, IChannelList>(); } }
+		public int Max_rit { get { return max_rit; } }
+		public int Max_xit { get { return max_xit; } }
+		public int Max_ifshift { get { return max_ifshift; } }
+		public RigAnnounce Announces { get { return announces; } }
+		public int[] Preamp { get { return preamp; } }
+		public int[] Attenuator { get { return attenuator; } }
+		public uint Has_get_func { get { return has_get_func; } }
+		public uint Has_set_func { get { return Has_set_func; } }
+		public uint Has_get_level { get { return has_get_level; } }
+		public uint Has_set_level { get { return has_set_level; } }
+		public uint Has_get_parm { get { return has_get_parm; } }
+		public uint Has_set_parm { get { return has_set_parm; } }
+		public Granularity[] Level_gran { get { return level_gran; } }
+		public Granularity[] Parm_gran { get { return parm_gran; } }
+		public int Hold_decode { get { return hold_decode; } }
+		public int Current_vfo { get { return current_vfo; } }
+		public int Vfo_list { get { return vfo_list; } }
+		public int Comm_state { get { return comm_state; } }
+		public IntPtr Priv { get { return priv; } }
+		public IntPtr Obj { get { return obj; } }
+		public int Transceive { get { return transceive; } }
+		public int Poll_interval { get { return poll_interval; } }
+		public double Current_freq { get { return current_freq; } }
+		public RigMode Current_mode { get { return current_mode; } }
+		public int Current_width { get { return current_width; } }
+		public int Tx_vfo { get { return tx_vfo; } }
+		public RigMode Mode_list { get { return mode_list; } }
 	}
 }

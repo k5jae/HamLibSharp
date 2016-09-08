@@ -82,9 +82,9 @@ namespace HamLibSharp
 		//				ptt_type_t ptt;		/*!< PTT port type */
 		//				dcd_type_t dcd;		/*!< DCD port type */
 		//			} type;
-		int rig_ptt_dcd;
+		IntPtr rig_ptt_dcd;
 
-		int fd;
+		IntPtr fd;
 		/*!< File descriptor */
 		IntPtr handle;
 		/*!< handle for USB */
@@ -120,9 +120,9 @@ namespace HamLibSharp
 		IntPtr product;
 		/*!< Product (opt.) */
 
-		int test;
+		//int test;
 		/*!< alternate */
-		int test2;
+		//int test2;
 		/*!< alternate */
 
 		//		union {

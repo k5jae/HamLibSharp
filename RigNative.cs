@@ -149,7 +149,21 @@ namespace HamLibSharp
 		//		extern HAMLIB_EXPORT(int) rig_token_foreach HAMLIB_PARAMS((RIG *rig, int (*cfunc)(const struct confparams *, rig_ptr_t), rig_ptr_t data));
 
 		[DllImport (HamLib.dllName)]
-		private static extern ConfigurationParameter rig_confparam_lookup (IntPtr rig, string name);
+		private static extern IntPtr rig_confparam_lookup (IntPtr rig, string name);
+
+		private static IConfigurationParameter confparam_marshal(IntPtr configParamPtr)
+		{
+			IConfigurationParameter confParam = null;
+
+			// if the platform is 64-bit, but not windows
+			if (!HamLib.isWindows && HamLib.bitsize64) {
+				confParam = Marshal.PtrToStructure<ConfigurationParameter64> (configParamPtr);
+			} else {
+				confParam = Marshal.PtrToStructure<ConfigurationParameter32> (configParamPtr);
+			}
+
+			return confParam;
+		}
 
 		[DllImport (HamLib.dllName, EntryPoint = "rig_token_lookup", CharSet = CharSet.Ansi)]
 		private static extern int rig_token_lookup (IntPtr rig, string name);

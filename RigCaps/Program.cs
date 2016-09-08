@@ -332,10 +332,10 @@ namespace RigCaps
 
 			Console.WriteLine("Tuning steps:");
 			for (i = 0; i < caps.TuningSteps.Count; i++) {
-				if (caps.TuningSteps[i].Step == TuningStep.Any)
+				if (caps.TuningSteps[i].Value == ModeValue.Any)
 					Console.Write("\tANY");         
 				else
-					Console.Write("\t{0}", caps.TuningSteps[i].Step);
+					Console.Write("\t{0}", caps.TuningSteps[i].Value);
 
 				sb = new StringBuilder ();
 				foreach (RigMode mode in Enum.GetValues(typeof(RigMode))) {
@@ -359,10 +359,10 @@ namespace RigCaps
 
 			Console.WriteLine("Filters:");
 			for (i = 0; i < caps.Filters.Count; i++) {
-				if (caps.Filters[i].Width == FilterList.Any)
+				if (caps.Filters[i].Value == ModeValue.Any)
 					Console.Write("\tANY");         
 				else
-					Console.Write("\t{0}", Rig.FrequencyToString(caps.Filters[i].Width));
+					Console.Write("\t{0}", Rig.FrequencyToString(caps.Filters[i].Value));
 
 				sb = new StringBuilder ();
 				foreach (RigMode mode in Enum.GetValues(typeof(RigMode))) {
@@ -481,7 +481,7 @@ namespace RigCaps
 			Console.WriteLine("Overall backend warnings: {0}", backend_warnings);
 		}
 
-		static string DumpChannelCaps(ChannelCapability chan)
+		static string DumpChannelCaps(IChannelCapability chan)
 		{
 			StringBuilder sb = new StringBuilder ();
 			if (chan.BankNumber) sb.Append("BANK ");
@@ -536,20 +536,20 @@ namespace RigCaps
 			return 0;
 		}
 
-		static int TuneStepSanityCheck(IList<TuningStep> tuningStepList)
+		static int TuneStepSanityCheck(IList<IModeValue> tuningStepList)
 		{
 			int i;
 			int last_ts = 0;
 			RigMode last_modes = RigMode.None;
 
 			for (i=0; i < tuningStepList.Count; i++) {
-				if (tuningStepList[i].Step != TuningStep.Any && 
-					tuningStepList[i].Step < last_ts &&
+				if (tuningStepList[i].Value != ModeValue.Any && 
+					tuningStepList[i].Value < last_ts &&
 					last_modes == tuningStepList[i].Modes)
 					return -1;
 				if (tuningStepList[i].Modes == RigMode.None)
 					return -2;
-				last_ts = tuningStepList[i].Step;
+				last_ts = tuningStepList[i].Value;
 				last_modes = tuningStepList[i].Modes;
 			}
 
