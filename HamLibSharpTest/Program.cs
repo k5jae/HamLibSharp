@@ -31,8 +31,8 @@ namespace HamLibSharpTest
 	{
 		public static void Main (string[] args)
 		{
-			var rigName = "Dummy";
-			//var rigName = "FT-857";
+			//var rigName = "Dummy";
+			var rigName = "FT-857";
 			var serialPort = "/dev/ttyUSB0";
 
 			Console.WriteLine("HamLib Native Library Version: {0}", HamLib.NativeVersion);

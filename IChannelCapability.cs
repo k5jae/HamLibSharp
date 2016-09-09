@@ -1,5 +1,5 @@
 ﻿//
-//  Interfaces.cs
+//  IChannelCapability.cs
 //
 //  Author:
 //       Jae Stutzman <jaebird@gmail.com>
@@ -24,43 +24,6 @@ using System;
 
 namespace HamLibSharp
 {
-	public interface IModeValue
-	{
-		RigMode Modes { get; }
-		int Value { get; }
-	}
-
-	/// Configuration parameter.
-	public interface IConfigurationParameter
-	{
-		int Token { get; }
-
-		string Name { get; }
-
-		string Label { get; }
-
-		string Tooltip { get; }
-
-		string Default { get; }
-
-		float Min { get; }
-
-		float Max { get; }
-
-		float Step { get; }
-	}
-
-	public interface IChannelList
-	{
-		int Start { get; }
-
-		int End { get; }
-
-		RigMemoryChannel Type { get; }
-
-		IChannelCapability MemCaps { get; }
-	};
-
 	// Channel capability definition
 	//
 	// Definition of the attributes that can be stored/retrieved in/from memory

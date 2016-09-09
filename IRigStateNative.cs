@@ -31,40 +31,75 @@ namespace HamLibSharp
 	internal interface IRigStateNative
 	{
 		HamLibPortNative[] Ptt_dcd_ports { get; }
+
 		double Vfo_comp { get; }
+
 		int Itu_region { get; }
+
 		FrequencyRange[] Rx_range_list { get; }
+
 		FrequencyRange[] Tx_range_list { get; }
+
 		IList<IModeValue> Tuning_steps { get; }
+
 		IList<IModeValue> Filters { get; }
+
 		CalibrationTable Str_cal { get; }
+
 		IList<IChannelList> Chan_list { get; }
+
 		int Max_rit { get; }
+
 		int Max_xit { get; }
+
 		int Max_ifshift { get; }
+
 		RigAnnounce Announces { get; }
+
 		int[] Preamp { get; }
+
 		int[] Attenuator { get; }
+
 		uint Has_get_func { get; }
+
 		uint Has_set_func { get; }
+
 		uint Has_get_level { get; }
+
 		uint Has_set_level { get; }
+
 		uint Has_get_parm { get; }
+
 		uint Has_set_parm { get; }
+
 		Granularity[] Level_gran { get; }
+
 		Granularity[] Parm_gran { get; }
+
 		int Hold_decode { get; }
+
 		int Current_vfo { get; }
+
 		int Vfo_list { get; }
+
 		int Comm_state { get; }
+
 		IntPtr Priv { get; }
+
 		IntPtr Obj { get; }
+
 		int Transceive { get; }
+
 		int Poll_interval { get; }
+
 		double Current_freq { get; }
+
 		RigMode Current_mode { get; }
+
 		int Current_width { get; }
+
 		int Tx_vfo { get; }
+
 		RigMode Mode_list { get; }
 	}
 }

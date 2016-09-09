@@ -109,25 +109,33 @@ namespace HamLibSharp.Utils
 
 		internal static bool LoadLibrary (string dllName)
 		{
-
 			if (System.Environment.OSVersion.Platform != PlatformID.MacOSX && System.Environment.OSVersion.Platform != PlatformID.Unix) {
 
 				var dllPath = dllName;
+				string dllDir = string.Empty;
 
 				if (System.Environment.Is64BitProcess) {
 					// "x64"
-					dllPath = System.IO.Path.Combine (GetDllConfig (true), dllName);
+					dllDir = GetDllConfig (true);
+					dllPath = System.IO.Path.Combine (dllDir, dllName);
 				} else {
 					// "x86"
-					dllPath = System.IO.Path.Combine (GetDllConfig (false), dllName);
+					dllDir = GetDllConfig (false);
+					dllPath = System.IO.Path.Combine (dllDir, dllName);
 				}
 
 				if (!File.Exists (dllPath)) {
 					throw new FileNotFoundException (string.Format ("Unable to Load Dll. File not found: {0}", Path.GetFullPath (dllPath)), dllPath);
 				}
 
+				var path = Environment.GetEnvironmentVariable ("Path");
+				var fullDllDir = Path.GetFullPath (dllDir);
+				Environment.SetEnvironmentVariable ("Path", fullDllDir + ";" + path);
+				path = Environment.GetEnvironmentVariable ("Path");
+				//Console.WriteLine (path);
+
 				//Console.WriteLine (dllPath);
-				return LoadLibraryInterop (dllPath) != IntPtr.Zero ? true : false;
+				return true; //LoadLibraryInterop (dllPath) != IntPtr.Zero ? true : false;
 			}
 
 			return true;

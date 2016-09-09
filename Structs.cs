@@ -44,25 +44,25 @@ namespace HamLibSharp
 		string cs;
 	}
 
+	/// Numeric type
 	[StructLayout (LayoutKind.Sequential)]
 	struct paramN
 	{
-		/*!< Minimum value */
+		/// Minimum value
 		float min;
-		/*!< Maximum value */
+		/// Maximum value
 		float max;
-		/*!< Step */
+		/// Step
 		float step;
-		/*!< Numeric type */
 	}
 
+	/// Combo type
 	[StructLayout (LayoutKind.Sequential)]
 	struct paramC
 	{
-		/*!< Combo list */
+		/// Combo list
 		[MarshalAs (UnmanagedType.LPStr)]
 		string combostr;
-		/*!< Combo type */
 	}
 
 	[StructLayout (LayoutKind.Explicit)]
@@ -77,8 +77,6 @@ namespace HamLibSharp
 	}
 
 	// TODO: ConfigurationParameter still needs to attention due to C unions ///
-
-
 
 	// TODO: the value_t union makes this difficult
 	[StructLayout (LayoutKind.Sequential)]
@@ -141,10 +139,11 @@ namespace HamLibSharp
 			int val;
 		}
 
-		int size;
 		// number of plots in the table
-		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.MAX_CAL_LENGTH)]
+		int size;
+
 		// table of plots
+		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.MAX_CAL_LENGTH)]
 		TableDef[] table = new CalibrationTable.TableDef[Rig.MAX_CAL_LENGTH];
 	};
 }

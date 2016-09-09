@@ -1,5 +1,5 @@
 ﻿//
-//  RigStateNative.cs
+//  RigStateNative64.cs
 //
 //  Author:
 //       Jae Stutzman <jaebird@gmail.com>
@@ -24,37 +24,20 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace HamLibSharp
+namespace HamLibSharp.x64
 {
-	[StructLayout (LayoutKind.Sequential)]
-	internal class NativeRig64 : INativeRig
-	{
-		/// <summary>
-		/// Pointer to rig capabilities (read only)
-		/// </summary>
-		public IntPtr caps;
-		/// <summary>
-		/// Rig state
-		/// </summary>
-		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
-		public RigStateNative64 state;
-		/// <summary>
-		/// Registered event callbacks
-		/// </summary>
-		public IntPtr callbacks;
-
-		public IntPtr Caps { get { return caps; } }
-		public IRigStateNative State { get { return state; } }
-		public IntPtr Callbacks { get { return callbacks; } }
-	};
 
 	// TODO: Primary interest is to get the vfo_list and mode_list. Everything else untested.
 	[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 	internal struct RigStateNative64 : IRigStateNative
 	{
+		// max mode/filter list size, zero ended
+		// NOTE: This was changed from 42 to 60 in version 3.0.1
+		internal const int FLTLSTSIZ = 60;
+
 		//		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
 		//		HamLibCommPortNative port;	/// Rig port (internal use).
-	
+
 		/// Rig port (internal use).
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 3)]
 		internal HamLibPortNative[] ptt_dcd_ports;
@@ -77,7 +60,7 @@ namespace HamLibSharp
 		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.TSLSTSIZ)]
 		internal ModeValue64[] tuning_steps;
 
-		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.FLTLSTSIZ)]
+		[MarshalAs (UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = FLTLSTSIZ)]
 		internal ModeValue64[] filters;
 
 		// S-meter calibration table
@@ -192,6 +175,5 @@ namespace HamLibSharp
 		public int Current_width { get { return (int)current_width; } }
 		public int Tx_vfo { get { return tx_vfo; } }
 		public RigMode Mode_list { get { return mode_list; } }
-
 	}
 }

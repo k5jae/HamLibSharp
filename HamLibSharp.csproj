@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>HamLibSharp</RootNamespace>
     <AssemblyName>HamLibSharp</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,18 +44,41 @@
     <Compile Include="Structs.cs" />
     <Compile Include="HamLibPortNative.cs" />
     <Compile Include="RigVfo.cs" />
-    <Compile Include="RigCapsNative32.cs" />
-    <Compile Include="RigCapsNative64.cs" />
-    <Compile Include="RigStateNative32.cs" />
-    <Compile Include="RigStateNative64.cs" />
     <Compile Include="Utils\CastedList.cs" />
     <Compile Include="IRigCapsNative.cs" />
     <Compile Include="IRigStateNative.cs" />
-    <Compile Include="Interfaces.cs" />
+    <Compile Include="x86\ChannelCapability32.cs" />
+    <Compile Include="x86\ChannelList32.cs" />
+    <Compile Include="x86\ConfigurationParameter32.cs" />
+    <Compile Include="x86\ModeValue32.cs" />
+    <Compile Include="x86\NativeRig32.cs" />
+    <Compile Include="x86\NativeRig32v2.cs" />
+    <Compile Include="x86\RigCapsNative32.cs" />
+    <Compile Include="x86\RigCapsNative32v2.cs" />
+    <Compile Include="x86\RigCapsNative32v301.cs" />
+    <Compile Include="x86\RigStateNative32.cs" />
+    <Compile Include="x86\RigStateNative32v2.cs" />
+    <Compile Include="x64\RigCapsNative64.cs" />
+    <Compile Include="x64\RigCapsNative64v2.cs" />
+    <Compile Include="x64\RigCapsNative64v301.cs" />
+    <Compile Include="x64\RigStateNative64.cs" />
+    <Compile Include="x64\RigStateNative64v2.cs" />
+    <Compile Include="x64\ConfigurationParameter64.cs" />
+    <Compile Include="x64\ModeValue64.cs" />
+    <Compile Include="x64\ChannelList64.cs" />
+    <Compile Include="x64\ChannelCapability64.cs" />
+    <Compile Include="x64\NativeRig64.cs" />
+    <Compile Include="x64\NativeRig64v2.cs" />
+    <Compile Include="IModeValue.cs" />
+    <Compile Include="IConfigurationParameter.cs" />
+    <Compile Include="IChannelList.cs" />
+    <Compile Include="IChannelCapability.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Utils\" />
+    <Folder Include="x86\" />
+    <Folder Include="x64\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

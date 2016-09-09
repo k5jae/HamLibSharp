@@ -22,6 +22,8 @@
 
 using System;
 using System.Runtime.InteropServices;
+using HamLibSharp.x86;
+using HamLibSharp.x64;
 
 namespace HamLibSharp
 {
@@ -57,8 +59,6 @@ namespace HamLibSharp
 		internal const int MAXCHANDESC = 30;
 		/* max tuning step list size, zero ended */
 		internal const int TSLSTSIZ = 20;
-		/* max mode/filter list size, zero ended */
-		internal const int FLTLSTSIZ = 60;
 		/* max preamp/att levels supported, zero ended */
 		internal const int MAXDBLSTSIZ = 8;
 		/* max mem_list size, zero ended */
@@ -70,7 +70,7 @@ namespace HamLibSharp
 
 
 		[DllImport (HamLib.dllName)]
-		private static extern IntPtr rig_init (int rig_model);
+		internal static extern IntPtr rig_init (int rig_model);
 
 		[DllImport (HamLib.dllName)]
 		private static extern RigError rig_open (IntPtr rig);

@@ -1,5 +1,5 @@
 ﻿//
-//  RigCapsNative.cs
+//  RigCapsNative32.cs
 //
 //  Author:
 //       Jae Stutzman <jaebird@gmail.com>
@@ -24,15 +24,19 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace HamLibSharp
+namespace HamLibSharp.x86
 {
 	/// <summary>
 	/// This class holds the caps values and uses the C type "long" as 32-bit.
-	/// This is used for 32-bit architectures and all Windows architectures (32 and 64 bit) 
+	/// This is used for 32-bit architectures and all Windows architectures (32 and 64 bit)
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 	internal class RigCapsNative32 : IRigCapsNative
 	{
+		// max mode/filter list size, zero ended
+		// NOTE: This was changed from 42 to 60 in version 3.0.1
+		internal const int FLTLSTSIZ = 60;
+
 		// Rig model
 		private int rig_model;
 		//rig_model_t
@@ -180,7 +184,7 @@ namespace HamLibSharp
 		private ModeValue32[] tuning_steps;
 
 		// mode/filter table, at -6dB
-		[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = Rig.FLTLSTSIZ)]
+		[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = FLTLSTSIZ)]
 		private ModeValue32[] filters_list;
 
 		// S-meter calibration table
@@ -307,6 +311,17 @@ namespace HamLibSharp
 
 		//[MarshalAs (UnmanagedType.LPStr)]
 		private IntPtr clone_combo_get;
+
+		private int test1;
+		private int test2;
+		private int test3;
+		private int test4;
+		private int test5;
+		private int test6;
+		private int test7;
+		private int test8;
+		private int test9;
+		private int test10;
 
 		// Getter Properties to implement the interface
 		public int Rig_model { get { return rig_model; } }
@@ -446,157 +461,5 @@ namespace HamLibSharp
 		public IntPtr Get_mem_all_cb { get { return get_mem_all_cb; } }
 		public IntPtr Clone_combo_set { get { return clone_combo_set; } }
 		public IntPtr Clone_combo_get { get { return clone_combo_get; } }
-	}
-
-	/// Configuration parameter structure.
-	[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-	internal class ConfigurationParameter32 : IConfigurationParameter
-	{
-		public int Token { get { return token; } }
-
-		public string Name { get { return name; } }
-
-		public string Label { get { return label; } }
-
-		public string Tooltip { get { return tooltip; } }
-
-		public string Default { get { return dflt; } }
-
-		public float Min { get { return min; } }
-
-		public float Max { get { return max; } }
-
-		public float Step { get { return step; } }
-
-		/*!< Conf param token ID */
-		int token;
-		/*!< Param name, no spaces allowed */
-		[MarshalAs (UnmanagedType.LPStr)]
-		string name;
-		/*!< Human readable label */
-		[MarshalAs (UnmanagedType.LPStr)]
-		string label;
-		/*!< Hint on the parameter */
-		[MarshalAs (UnmanagedType.LPStr)]
-		string tooltip;
-		/*!< Default value */
-		[MarshalAs (UnmanagedType.LPStr)]
-		string dflt;
-		/*!< Type of the parameter */
-		RigConf type;
-		/*!< */
-		//[MarshalAs (UnmanagedType.Struct)]
-		//paramU u;
-		/*!< Minimum value */
-		float min;
-		/*!< Maximum value */
-		float max;
-		/*!< Step */
-		float step;
-		/*!< Numeric type */
-	}
-
-	[StructLayout (LayoutKind.Sequential)]
-	internal struct ModeValue32 : IModeValue
-	{
-		public RigMode Modes { get { return modes; } }
-
-		public int Value { get { return val; } }
-
-		public const int Any = 0;
-
-		// Bit field of RIG_MODE's
-		RigMode modes;
-		// val
-		int val;
-	};
-
-	[StructLayout (LayoutKind.Sequential)]
-	internal struct ChannelList32 : IChannelList
-	{
-		public int Start { get { return start; } }
-
-		public int End { get { return end; } }
-
-		public RigMemoryChannel Type { get { return type; } }
-
-		public IChannelCapability MemCaps { get { return mem_caps; } }
-
-		// Starting memory channel \b number
-		int start;
-		// Ending memory channel \b number
-		int end;
-		// Memory type. see chan_type_t
-		RigMemoryChannel type;
-		// Definition of attributes that can be stored/retrieved
-		ChannelCapability32 mem_caps;
-	};
-
-	[StructLayout (LayoutKind.Sequential)]
-	internal struct ChannelCapability32: IChannelCapability
-	{
-		private short raw0;
-
-		// Bank number
-		public bool BankNumber { get { return ((byte)((raw0 >> 0) & 0x01)) != 0; } }
-		// VFO
-		public bool Vfo{ get { return ((byte)((raw0 >> 1) & 0x01)) != 0; } }
-		// Selected antenna
-		public bool  Antenna{ get { return ((byte)((raw0 >> 2) & 0x01)) != 0; } }
-		// Receive frequency
-		public bool  RXFrequency{ get { return ((byte)((raw0 >> 3) & 0x01)) != 0; } }
-		// Receive mode
-		public bool  RXMode{ get { return ((byte)((raw0 >> 4) & 0x01)) != 0; } }
-		// Receive passband width associated with mode
-		public bool  RXWidth{ get { return ((byte)((raw0 >> 5) & 0x01)) != 0; } }
-		// Transmit frequency
-		public bool  TXFrequency{ get { return ((byte)((raw0 >> 6) & 0x01)) != 0; } }
-		// Transmit mode
-		public bool  TXMode{ get { return ((byte)((raw0 >> 7) & 0x01)) != 0; } }
-		// Transmit passband width associated with mode
-
-		public bool  TXWidth{ get { return ((byte)((raw0 >> 8) & 0x01)) != 0; } }
-		// Split mode
-		public bool  Split{ get { return ((byte)((raw0 >> 9) & 0x01)) != 0; } }
-		// Split transmit VFO
-		public bool  TXVfo{ get { return ((byte)((raw0 >> 10) & 0x01)) != 0; } }
-		// Repeater shift
-		public bool  RepeaterShift{ get { return ((byte)((raw0 >> 11) & 0x01)) != 0; } }
-		// Repeater offset
-		public bool  RepeaterOffset{ get { return ((byte)((raw0 >> 12) & 0x01)) != 0; } }
-		// Tuning step
-		public bool  TuningStep{ get { return ((byte)((raw0 >> 13) & 0x01)) != 0; } }
-		// RIT
-		public bool  Rit{ get { return ((byte)((raw0 >> 14) & 0x01)) != 0; } }
-		// XIT
-		public bool  Xit{ get { return ((byte)((raw0 >> 15) & 0x01)) != 0; } }
-
-		// Function status
-		uint funcs;
-		// Level values
-		uint levels;
-
-		public uint Functions { get { return funcs; } }
-
-		public uint Levels { get { return levels; } }
-
-		private short raw2;
-
-		// CTCSS tone
-		public bool  CtcssTone { get { return ((byte)((raw2 >> 0) & 0x01)) != 0; } }
-		// CTCSS squelch tone
-		public bool  CtcssSquelch{ get { return ((byte)((raw2 >> 1) & 0x01)) != 0; } }
-		// DCS code
-		public bool  DcsCode{ get { return ((byte)((raw2 >> 2) & 0x01)) != 0; } }
-		// DCS squelch code
-		public bool  DcsSquelch{ get { return ((byte)((raw2 >> 3) & 0x01)) != 0; } }
-		// Scan group
-		public bool  ScanGroup{ get { return ((byte)((raw2 >> 4) & 0x01)) != 0; } }
-		// Channel flags
-		public bool  ChannelFlags{ get { return ((byte)((raw2 >> 5) & 0x01)) != 0; } }
-		// Name
-		public bool  ChannelName{ get { return ((byte)((raw2 >> 6) & 0x01)) != 0; } }
-		// Extension level value list
-		public bool  ExtensionLevels{ get { return ((byte)((raw2 >> 7) & 0x01)) != 0; } }
 	}
 }

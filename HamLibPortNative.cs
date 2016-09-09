@@ -27,52 +27,52 @@ namespace HamLibSharp
 {
 	// TODO: The port struct is not really useful yet. It is used to as place
 	// holder for Marshal copying
-	[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-	internal struct HamLibCommPortNative
-	{
-		RigPort rig;
-
-		int fd;
-		/*!< File descriptor */
-		IntPtr handle;
-		/*!< handle for USB */
-
-		int write_delay;
-		/*!< Delay between each byte sent out, in mS */
-		int post_write_delay;
-		/*!< Delay between each commands send out, in mS */
-		int tv_sec;
-		int tv_usec;
-		//} post_write_date;	/*!< hamlib internal use */
-		int timeout;
-		/*!< Timeout, in mS */
-		int retry;
-		/*!< Maximum number of retries, 0 to disable */
-
-		[MarshalAs (UnmanagedType.ByValTStr, SizeConst = Rig.FILPATHLEN)]
-		string pathname;
-		/*!< Port pathname */
-	
-		int rate;
-		/*!< Serial baud rate */
-		int data_bits;
-		/*!< Number of data bits */
-		int stop_bits;
-		/*!< Number of stop bits */
-		RigSerialParity parity;
-		/*!< Serial parity */
-		RigSerialHandshake handshake;
-		/*!< Serial handshake */
-		RigSerialControlState rts_state;
-		/*!< RTS set state */
-		RigSerialControlState dtr_state;
-		/*!< DTR set state */
-
-		int test;
-		/*!< alternate */
-		int test2;
-		/*!< alternate */
-	}
+//	[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+//	internal struct HamLibCommPortNative
+//	{
+//		RigPort rig;
+//
+//		int fd;
+//		/*!< File descriptor */
+//		IntPtr handle;
+//		/*!< handle for USB */
+//
+//		int write_delay;
+//		/*!< Delay between each byte sent out, in mS */
+//		int post_write_delay;
+//		/*!< Delay between each commands send out, in mS */
+//		int tv_sec;
+//		int tv_usec;
+//		//} post_write_date;	/*!< hamlib internal use */
+//		int timeout;
+//		/*!< Timeout, in mS */
+//		int retry;
+//		/*!< Maximum number of retries, 0 to disable */
+//
+//		[MarshalAs (UnmanagedType.ByValTStr, SizeConst = Rig.FILPATHLEN)]
+//		string pathname;
+//		/*!< Port pathname */
+//	
+//		int rate;
+//		/*!< Serial baud rate */
+//		int data_bits;
+//		/*!< Number of data bits */
+//		int stop_bits;
+//		/*!< Number of stop bits */
+//		RigSerialParity parity;
+//		/*!< Serial parity */
+//		RigSerialHandshake handshake;
+//		/*!< Serial handshake */
+//		RigSerialControlState rts_state;
+//		/*!< RTS set state */
+//		RigSerialControlState dtr_state;
+//		/*!< DTR set state */
+//
+//		int test;
+//		/*!< alternate */
+//		int test2;
+//		/*!< alternate */
+//	}
 
 	[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 	internal struct HamLibPortNative

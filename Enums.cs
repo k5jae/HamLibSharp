@@ -379,7 +379,8 @@ namespace HamLibSharp
 		DSB = (1 << 19),
 		/// MUST ALWAYS BE LAST, Max Count for dumpcaps.c
 		//TestMax
-	} //rmode_t;
+	}
+	//rmode_t;
 
 	//Hamlib error codes
 	// Error code definition that can be returned by the Hamlib functions.

@@ -91,7 +91,7 @@ namespace HamLibSharp
 					break;
 				}
 			}
-			return newList.AsReadOnly();
+			return newList.AsReadOnly ();
 		}
 
 		private IList<IModeValue> CreateModeValueList (IList<IModeValue> values)
@@ -105,7 +105,7 @@ namespace HamLibSharp
 					break;
 				}
 			}
-			return newList.AsReadOnly();
+			return newList.AsReadOnly ();
 		}
 
 		public int RigModel {
@@ -637,9 +637,11 @@ namespace HamLibSharp
 
 		public bool HasGetInfo { get { return rigCapsNative.Get_info != IntPtr.Zero; } }
 
-		public string CloneComboSet { get { return string.Empty; } }// rigCapsNative.Clone_combo_set; } }
+		public string CloneComboSet { get { return string.Empty; } }
+// rigCapsNative.Clone_combo_set; } }
 
-		public string CloneComboGet  { get { return string.Empty; } }//rigCapsNative.Clone_combo_get; } }
+		public string CloneComboGet  { get { return string.Empty; } }
+//rigCapsNative.Clone_combo_get; } }
 
 		//		public override string ToString ()
 		//		{
@@ -650,7 +652,7 @@ namespace HamLibSharp
 		public string ToJson ()
 		{
 			return string.Format ("{{ \"RigModel\": \"{0}\", \"ModelName\": \"{1}\", \"MfgName\": \"{2}\" }}",
-			                      RigModel, ModelName, MfgName);
+				RigModel, ModelName, MfgName);
 		}
 	}
 }

@@ -25,21 +25,25 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Runtime.InteropServices;
+using HamLibSharp.x86;
+using HamLibSharp.x64;
 
 namespace HamLibSharp
 {
 	internal interface INativeRig
 	{
 		IntPtr Caps { get; }
+
 		IRigStateNative State { get; }
+
 		IntPtr Callbacks { get; }
 	};
 
 	public partial class Rig : IDisposable
 	{
 		const int CommErrors = 10;
-		const int UpdateRate = 250;
 		// milliseconds
+		const int UpdateRate = 250;
 		const string ConfTokenDevice = "rig_pathname";
 		const string ConfTokenSerialSpeed = "serial_speed";
 
@@ -280,18 +284,8 @@ namespace HamLibSharp
 			if (theRig == IntPtr.Zero)
 				throw new RigException ("Rig initialization error");
 
-
-			IRigCapsNative caps = null;
-
-			// if the platform is 64-bit, but not windows
-			if (!HamLib.isWindows && HamLib.bitsize64) {
-				nativeRig = Marshal.PtrToStructure<NativeRig64> (theRig);
-				caps = Marshal.PtrToStructure<RigCapsNative64> (nativeRig.Caps);
-			} else {
-				nativeRig = Marshal.PtrToStructure<NativeRig32> (theRig);
-				caps = Marshal.PtrToStructure<RigCapsNative32> (nativeRig.Caps);
-			}
-
+			nativeRig = MarshalNativeRig (theRig);
+			var caps = HamLib.MarshalRigCaps (nativeRig.Caps);
 			rigCaps = new RigCaps (caps, this);
 
 			// test...
@@ -301,6 +295,35 @@ namespace HamLibSharp
 
 			// end test....
 
+		}
+
+		internal static INativeRig MarshalNativeRig (IntPtr rig_ptr)
+		{
+			INativeRig rig = null;
+
+			switch (HamLib.hamLibVersion) {
+			case HamLibVersion.Current:
+			case HamLibVersion.V301:
+				// if the platform is 64-bit, but not windows
+				if (!HamLib.isWindows && HamLib.bitsize64) {
+					rig = Marshal.PtrToStructure<NativeRig64> (rig_ptr);
+				} else {
+					rig = Marshal.PtrToStructure<NativeRig32> (rig_ptr);
+				}
+				break;
+			case HamLibVersion.V2:
+				// if the platform is 64-bit, but not windows
+				if (!HamLib.isWindows && HamLib.bitsize64) {
+					rig = Marshal.PtrToStructure<NativeRig64v2> (rig_ptr);
+				} else {
+					rig = Marshal.PtrToStructure<NativeRig32v2> (rig_ptr);
+				}
+				break;
+			default:
+				throw new RigException ("Unknown or Incompatible HamLib library found");
+			}
+
+			return rig;
 		}
 
 		private static int OnFrequency (IntPtr theRig, int vfo, double freq, IntPtr rig_ptr)

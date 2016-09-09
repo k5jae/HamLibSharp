@@ -24,13 +24,24 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using HamLibSharp.Utils;
+using HamLibSharp.x86;
+using HamLibSharp.x64;
 
 namespace HamLibSharp
 {
+	internal enum HamLibVersion
+	{
+		Unknown = 0,
+		V2 = 2,
+		V301 = 3,
+		Current,
+	}
+
 	public static class HamLib
 	{
 		internal readonly static bool bitsize64;
 		internal readonly static bool isWindows;
+		internal readonly static HamLibVersion hamLibVersion;
 
 		public static bool Initialized { get; private set; }
 
@@ -44,7 +55,7 @@ namespace HamLibSharp
 		static HamLib ()
 		{
 			// determine platform and bit size...
-			if (Marshal.SizeOf<IntPtr>() == 8) {
+			if (System.Environment.Is64BitProcess) {
 				bitsize64 = true;
 			}
 
@@ -54,6 +65,61 @@ namespace HamLibSharp
 
 			// take care of 32/64 bit native windows dll
 			Library.LoadLibrary (dllName);
+
+			hamLibVersion = PreInitLibrary ();
+		}
+
+		static HamLibVersion PreInitLibrary ()
+		{
+			INativeRig initRig = null;
+			IRigCapsNative initCaps = null;
+			HamLibVersion version;
+
+			SetDebugLevel (RigDebugLevel.None);
+
+			// test what version of hamlib is on our system use the Dummy Rig
+			var theRig = Rig.rig_init (1);
+
+			if (!isWindows && bitsize64) {
+				initRig = Marshal.PtrToStructure<NativeRig64> (theRig);
+				initCaps = Marshal.PtrToStructure<RigCapsNative64> (initRig.Caps);
+				if (initCaps.Priv == IntPtr.Zero && initCaps.Decode_event == IntPtr.Zero) {
+					version = HamLibVersion.Current;
+				} else {
+					initCaps = Marshal.PtrToStructure<RigCapsNative64v301> (initRig.Caps);
+					if (initCaps.Priv == IntPtr.Zero && initCaps.Decode_event == IntPtr.Zero) {
+						version = HamLibVersion.V301;
+					} else {
+						initCaps = Marshal.PtrToStructure<RigCapsNative64v2> (initRig.Caps);
+						if (initCaps.Priv == IntPtr.Zero && initCaps.Decode_event == IntPtr.Zero) {
+							version = HamLibVersion.V2;
+						} else {
+							version = HamLibVersion.Unknown;
+						}
+					}
+				}
+			} else {
+				initRig = Marshal.PtrToStructure<NativeRig32> (theRig);
+
+				initCaps = Marshal.PtrToStructure<RigCapsNative32> (initRig.Caps);
+				if (initCaps.Priv == IntPtr.Zero && initCaps.Decode_event == IntPtr.Zero) {
+					version = HamLibVersion.Current;
+				} else {
+					initCaps = Marshal.PtrToStructure<RigCapsNative32v301> (initRig.Caps);
+					if (initCaps.Priv == IntPtr.Zero && initCaps.Decode_event == IntPtr.Zero) {
+						version = HamLibVersion.V301;
+					} else {
+						initCaps = Marshal.PtrToStructure<RigCapsNative32v2> (initRig.Caps);
+						if (initCaps.Priv == IntPtr.Zero && initCaps.Decode_event == IntPtr.Zero) {
+							version = HamLibVersion.V2;
+						} else {
+							version = HamLibVersion.Unknown;
+						}
+					}
+				}
+			}
+
+			return version;
 		}
 
 		public static void Initialize ()
@@ -62,16 +128,10 @@ namespace HamLibSharp
 			var result = rig_load_all_backends ();
 
 			rig_list_foreach ((rig_caps, rig_ptr) => {
-				IRigCapsNative caps = null;
-
-				// if the platform is 64-bit, but not windows
-				if (!isWindows && bitsize64) {
-					caps = Marshal.PtrToStructure<RigCapsNative64> (rig_caps);
-				} else {
-					caps = Marshal.PtrToStructure<RigCapsNative32> (rig_caps);
+				if (rig_caps != IntPtr.Zero) {
+					var caps = MarshalRigCaps (rig_caps);
+					AddRig (new RigCaps (caps));
 				}
-
-				AddRig (new RigCaps (caps));
 				return 1;
 			}, IntPtr.Zero);
 
@@ -80,15 +140,47 @@ namespace HamLibSharp
 			Initialized = true;
 		}
 
+		internal static IRigCapsNative MarshalRigCaps (IntPtr rig_caps)
+		{
+			IRigCapsNative caps = null;
+
+			switch (hamLibVersion) {
+			case HamLibVersion.Current:
+				// if the platform is 64-bit, but not windows
+				if (!isWindows && bitsize64) {
+					caps = Marshal.PtrToStructure<RigCapsNative64> (rig_caps);
+				} else {
+					caps = Marshal.PtrToStructure<RigCapsNative32> (rig_caps);
+				}
+				break;
+			case HamLibVersion.V301:
+				if (!isWindows && bitsize64) {
+					caps = Marshal.PtrToStructure<RigCapsNative64v301> (rig_caps);
+				} else {
+					caps = Marshal.PtrToStructure<RigCapsNative32v301> (rig_caps);
+				}
+				break;
+			case HamLibVersion.V2:
+				if (!isWindows && bitsize64) {
+					caps = Marshal.PtrToStructure<RigCapsNative64v2> (rig_caps);
+				} else {
+					caps = Marshal.PtrToStructure<RigCapsNative32v2> (rig_caps);
+				}
+				break;
+			default:
+				throw new RigException ("Unknown or Incompatible HamLib library found");
+			}
+
+			return caps;
+		}
+
 		private static void AddRig (RigCaps caps)
 		{
 			int index = 2;
-			//string modelName = string.Format("{0} {1} ({2})", caps.ModelName, caps.MfgName, caps.Status);
 			string modelName = string.Format ("{0}", caps.ModelName);
 
 			while (Rigs.ContainsKey (modelName)) {
 				modelName = string.Format ("{0}_{1}", caps.ModelName, index);
-				//modelName = string.Format("{0}_{1} {2} ({3})", caps.ModelName, index, caps.MfgName, caps.Status);
 				index++;
 			} 
 
@@ -141,9 +233,17 @@ namespace HamLibSharp
 		public static string NativeVersion {
 			get {
 				try {
-
-					var ver = Marshal.PtrToStringAnsi (rig_version ());
-					return ver.Replace ("Hamlib", string.Empty).Trim ();
+					switch (hamLibVersion) {
+					case HamLibVersion.Current:
+						var ver = Marshal.PtrToStringAnsi (rig_version ());
+						return ver.Replace ("Hamlib", string.Empty).Trim ();
+					case HamLibVersion.V301:
+						return "3.0.1";
+					case HamLibVersion.V2:
+						return "1.2 or earlier";
+					default:
+						return "Unknown";
+					}
 				} catch (EntryPointNotFoundException e) {
 					//Console.WriteLine (e);
 					// Entry point not found, so it has to be 3.0.1 or earlier
