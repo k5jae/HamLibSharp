@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Runtime.InteropServices;
+using HamLibSharp.Utils;
 using HamLibSharp.x86;
 using HamLibSharp.x64;
 
@@ -46,6 +47,12 @@ namespace HamLibSharp
 		const int UpdateRate = 250;
 		const string ConfTokenDevice = "rig_pathname";
 		const string ConfTokenSerialSpeed = "serial_speed";
+		const string ConfTokenDatabits = "data_bits";
+		const string ConfTokenStopbits = "stop_bits";
+		const string ConfTokenSerialParity = "serial_parity";
+		const string ConfTokenSerialHandshake = "serial_handshake";
+		const string ConfTokenDataBits = "data_bits";
+
 
 		IntPtr theRig;
 		INativeRig nativeRig;
@@ -166,6 +173,27 @@ namespace HamLibSharp
 				lock (this) {
 					freq = value;
 				}
+			}
+		}
+
+		long width;
+		RigMode mode;
+		public RigMode Mode {
+			get {
+				lock (this) {
+					return mode;
+				}
+			}
+			private set {
+				lock (this) {
+					mode = value;
+				}
+			}
+		}
+
+		public string ModeText {
+			get {
+			 	return TextNameAttribute.GetTextName (Mode);
 			}
 		}
 
@@ -411,10 +439,14 @@ namespace HamLibSharp
 		/// </summary>
 		/// <param name="device">Device path (i.e. serial port).</param>
 		/// <param name="baud">baud rate of serial port.</param>
-		public void Open (string device, int baud)
+		public void Open (string device, RigSerialBaudRate baud, RigSerialHandshake handshake, int databits, int stopbits)
 		{
 			if (rigCaps.PortType == RigPort.Serial) {
-				SetConf (ConfTokenSerialSpeed, baud);
+				SetConf (ConfTokenSerialSpeed, (int)baud);
+				SetConf (ConfTokenSerialHandshake, TextNameAttribute.GetTextName(handshake));
+				SetConf (ConfTokenDatabits, databits);
+				SetConf (ConfTokenStopbits, stopbits);
+
 				OpenInternal (device);
 			} else {
 				throw new RigException (string.Format ("Device is not serial, but {0}", rigCaps.PortType));
@@ -487,11 +519,13 @@ namespace HamLibSharp
 				}
 			}
 
-			timer = new System.Timers.Timer (updateRate);
-			timer.AutoReset = false;
-			timer.Elapsed += Timer_Elapsed;
-			timer.Enabled = true;
-			timer.Start ();
+			if (updateRate > 0) {
+				timer = new System.Timers.Timer (updateRate);
+				timer.AutoReset = false;
+				timer.Elapsed += Timer_Elapsed;
+				timer.Enabled = true;
+				timer.Start ();
+			}
 
 			thread = new Thread (TaskThread);
 			thread.Start ();
@@ -502,6 +536,7 @@ namespace HamLibSharp
 			//logger.Debug ("Timer elapsed, Id: {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
 
 			UpdateFrequency (RigVfo.Current);
+			UpdateMode (RigVfo.Current);
 			UpdatePtt (RigVfo.Current);
 			timer.Enabled = true;
 		}
@@ -707,9 +742,32 @@ namespace HamLibSharp
 		/// <param name="vfo">The target VFO.</param>
 		public void SetMode (RigMode mode, long width, int vfo = RigVfo.Current)
 		{
+			if (thread != null) {
+				taskQueue.Add (() => setmode (mode, width, vfo));
+			} else {
+				setmode (mode, width, vfo);
+			}
+		}
+
+		private void setmode (RigMode mode, long width, int vfo = RigVfo.Current)
+		{
 			var ret = rig_set_mode (theRig, vfo, mode, width);
 			if (ret != RigError.OK) {
 				throw new RigException (ErrorString (ret));
+			}
+		}
+
+		/// <summary>
+		/// Retrieves the updated mode and passband of the target VFO.
+		/// Will use Task Queue if Start() has been called.
+		/// </summary>
+		/// <param name="vfo">The target VFO.</param>
+		public void UpdateMode (int vfo = RigVfo.Current)
+		{
+			if (thread != null) {
+				taskQueue.Add (() => Mode = GetMode(ref width, vfo));
+			} else {
+				Mode = GetMode(ref width, vfo);
 			}
 		}
 

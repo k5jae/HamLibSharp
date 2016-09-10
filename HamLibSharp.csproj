@@ -73,6 +73,7 @@
     <Compile Include="IConfigurationParameter.cs" />
     <Compile Include="IChannelList.cs" />
     <Compile Include="IChannelCapability.cs" />
+    <Compile Include="Utils\TextNameAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

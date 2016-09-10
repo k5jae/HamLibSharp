@@ -22,6 +22,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using HamLibSharp.Utils;
 
 namespace HamLibSharp
 {
@@ -173,6 +174,7 @@ namespace HamLibSharp
 		/// No handshake
 		None = 0,
 		/// Software XON/XOFF
+		[TextName("XONXOFF")]
 		XonXoff,
 		/// Hardware CTS/RTS
 		Hardware
@@ -358,10 +360,13 @@ namespace HamLibSharp
 		/// AMS -- Amplitude Modulation Synchronous
 		AMS = (1 << 9),
 		/// PKTLSB -- Packet/Digital LSB mode (dedicated port)
+		[TextName("Packet LSB")]
 		PacketLSB = (1 << 10),
 		/// PKTUSB -- Packet/Digital USB mode (dedicated port)
+		[TextName("Packet USB")]
 		PacketUSB = (1 << 11),
 		/// PKTFM -- Packet/Digital FM mode (dedicated port)
+		[TextName("Packet FM")]
 		PacketFM = (1 << 12),
 		/// ECSSUSB -- Exalted Carrier Single Sideband USB
 		EcssUSB = (1 << 13),
