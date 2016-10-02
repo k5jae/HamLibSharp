@@ -32,8 +32,10 @@ namespace HamLibSharpTest
 		public static void Main (string[] args)
 		{
 			var rigName = "Dummy";
+			var serialPort = string.Empty;
+
 			//var rigName = "FT-857";
-			var serialPort = "/dev/ttyUSB0";
+			//var serialPort = "/dev/ttyUSB0";
 
 			Console.WriteLine("HamLib Native Library Version: {0}", HamLib.NativeVersion);
 			Console.WriteLine("HamLib Managed Library Version: {0}", HamLib.ManagedVersion);
@@ -66,6 +68,7 @@ namespace HamLibSharpTest
 			rig.SetPtt (PttMode.On);
 
 			System.Threading.Thread.Sleep (1000);
+			Console.WriteLine(rig.GetPtt ());
 
 			Console.WriteLine ("PTT OFF");
 			rig.SetPtt (PttMode.Off);

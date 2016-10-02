@@ -187,7 +187,7 @@ namespace HamLibSharp
 		private static extern RigError rig_set_mode (IntPtr rig, int vfo, RigMode mode, long width);
 
 		[DllImport (HamLib.dllName)]
-		private static extern RigError rig_get_mode (IntPtr rig, int vfo, out RigMode mode, ref long width);
+		private static extern RigError rig_get_mode (IntPtr rig, int vfo, out RigMode mode, out long width);
 
 		[DllImport (HamLib.dllName)]
 		private static extern RigError rig_set_vfo (IntPtr rig, int vfo);

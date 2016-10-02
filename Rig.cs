@@ -165,8 +165,12 @@ namespace HamLibSharp
 		/// <value>The frequency in Hz.</value>
 		public double Freq {
 			get {
-				lock (this) {
-					return freq;
+				if (updateRate > 0) {
+					lock (this) {
+						return freq;
+					}
+				} else {
+					return GetFrequency ();
 				}
 			}
 			private set {
@@ -180,8 +184,12 @@ namespace HamLibSharp
 		RigMode mode;
 		public RigMode Mode {
 			get {
-				lock (this) {
-					return mode;
+				if (updateRate > 0) {
+					lock (this) {
+						return mode;
+					}
+				} else {
+					return GetMode (ref width);
 				}
 			}
 			private set {
@@ -206,8 +214,12 @@ namespace HamLibSharp
 		/// <value>The PTT status.</value>
 		public PttMode Ptt {
 			get {
-				lock (this) {
-					return ptt;
+				if (updateRate > 0) {
+					lock (this) {
+						return ptt;
+					}
+				} else {
+					return GetPtt ();
 				}
 			}
 			private set {
@@ -784,7 +796,7 @@ namespace HamLibSharp
 		{
 			RigMode mode;
 
-			var ret = rig_get_mode (theRig, vfo, out mode, ref width);
+			var ret = rig_get_mode (theRig, vfo, out mode, out width);
 			if (ret != RigError.OK) {
 				throw new RigException (ErrorString (ret));
 			}
