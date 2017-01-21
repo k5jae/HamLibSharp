@@ -567,6 +567,9 @@ namespace HamLibSharp
 			if (taskQueue != null) {
 				// this will cause thread to exit by throwing InvalidOperationException
 				taskQueue.CompleteAdding ();
+
+				// wait for taskQueue thread to exit
+				thread.Join ();
 			}
 		}
 
