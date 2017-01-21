@@ -67,6 +67,9 @@ namespace HamLibSharp
 		System.Timers.Timer timer;
 		Thread thread;
 		int updateRate;
+		volatile bool commErrorClose = false;
+
+		public event EventHandler CommErrorClose;
 
 		/// <summary>
 		/// Gets the unique model identifier
@@ -286,7 +289,7 @@ namespace HamLibSharp
 		/// <param name="rigModel">Rig model name.</param>
 		public Rig (string rigModel, int updateRate = UpdateRate)
 		{
-			this.updateRate = updateRate;
+			this.updateRate = updateRate < UpdateRate ? UpdateRate : updateRate;
 
 			if (!HamLib.Initialized) {
 				HamLib.Initialize ();
@@ -309,7 +312,7 @@ namespace HamLibSharp
 		/// <param name="rigModel">Rig model id.</param>
 		public Rig (int rigModel, int updateRate = UpdateRate)
 		{
-			this.updateRate = updateRate;
+			this.updateRate = updateRate < UpdateRate ? UpdateRate : updateRate;
 
 			if (!HamLib.Initialized) {
 				HamLib.Initialize ();
@@ -433,7 +436,7 @@ namespace HamLibSharp
 							GetPtt ();
 							foundBaud = true;
 							break;
-						} catch (RigException e) {
+						} catch (RigException) {
 							Close ();
 						}
 					}
@@ -519,6 +522,7 @@ namespace HamLibSharp
 		/// </summary>
 		public void Start ()
 		{
+			commErrorClose = false;
 			errorCount = 0;
 			taskQueue = new BlockingCollection<Action> ();
 
@@ -547,10 +551,18 @@ namespace HamLibSharp
 		{
 			//logger.Debug ("Timer elapsed, Id: {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
 
-			UpdateFrequency (RigVfo.Current);
-			UpdateMode (RigVfo.Current);
-			UpdatePtt (RigVfo.Current);
-			timer.Enabled = true;
+			if (commErrorClose) {
+				Stop ();
+				Close ();
+				if (CommErrorClose != null) {
+					CommErrorClose (this, new EventArgs ());
+				}
+			} else {
+				UpdateFrequency (RigVfo.Current);
+				UpdateMode (RigVfo.Current);
+				UpdatePtt (RigVfo.Current);
+				timer.Enabled = true;
+			}
 		}
 
 		/// <summary>
@@ -581,7 +593,7 @@ namespace HamLibSharp
 					taskQueue.Take ().Invoke ();
 					errorCount = 0;
 					LastStatus = string.Empty;
-				} catch (InvalidOperationException e) {
+				} catch (InvalidOperationException) {
 					running = false;
 					taskQueue = null;
 				} catch (RigException e) {
@@ -590,9 +602,7 @@ namespace HamLibSharp
 				}
 
 				if (errorCount > CommErrors) {
-					Stop ();
-					Close ();
-					//errorCount = 0;
+					commErrorClose = true;
 				}
 			}
 			thread = null;

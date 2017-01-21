@@ -100,9 +100,7 @@ namespace HamLibSharp.Utils
 						//Console.WriteLine();
 					}
 				}
-			} catch (Exception e) {
-				//Console.WriteLine (e);
-			}
+			} catch (Exception) {}
 
 			return dllDirectory;
 		}

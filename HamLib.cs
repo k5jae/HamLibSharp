@@ -125,7 +125,7 @@ namespace HamLibSharp
 		public static void Initialize ()
 		{
 			SetDebugLevel (RigDebugLevel.None);
-			var result = rig_load_all_backends ();
+			rig_load_all_backends ();
 
 			rig_list_foreach ((rig_caps, rig_ptr) => {
 				if (rig_caps != IntPtr.Zero) {
@@ -205,7 +205,7 @@ namespace HamLibSharp
 				try {
 
 					return Marshal.PtrToStringAnsi (rig_copyright ());
-				} catch (EntryPointNotFoundException e) {
+				} catch (EntryPointNotFoundException) {
 					return "Unknown";
 				}
 			}
@@ -220,7 +220,7 @@ namespace HamLibSharp
 				try {
 
 					return Marshal.PtrToStringAnsi (rig_license ());
-				} catch (EntryPointNotFoundException e) {
+				} catch (EntryPointNotFoundException) {
 					return "Unknown";
 				}
 			}
@@ -244,7 +244,7 @@ namespace HamLibSharp
 					default:
 						return "Unknown";
 					}
-				} catch (EntryPointNotFoundException e) {
+				} catch (EntryPointNotFoundException) {
 					//Console.WriteLine (e);
 					// Entry point not found, so it has to be 3.0.1 or earlier
 					return "3.0.1 or earlier";
