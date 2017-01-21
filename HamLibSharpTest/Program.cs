@@ -31,11 +31,14 @@ namespace HamLibSharpTest
 	{
 		public static void Main (string[] args)
 		{
-			var rigName = "Dummy";
-			var serialPort = string.Empty;
+			//var rigName = "Dummy";
+			//var serialPort = string.Empty;
 
 			//var rigName = "FT-857";
 			//var serialPort = "/dev/ttyUSB0";
+
+			var rigName = "PiHPSDR";
+			var serialPort = "127.0.0.1:19090";
 
 			Console.WriteLine("HamLib Native Library Version: {0}", HamLib.NativeVersion);
 			Console.WriteLine("HamLib Managed Library Version: {0}", HamLib.ManagedVersion);
@@ -51,8 +54,8 @@ namespace HamLibSharpTest
 
 			Rig rig = null;
 			try {
-			rig = new Rig (rigName);
-			rig.Open (serialPort);
+				rig = new Rig (rigName);
+				rig.Open (serialPort);
 			} catch (RigException e) {
 				Console.WriteLine ("Unable to Open Rig: {0}", e.Message);
 				return;
@@ -65,7 +68,7 @@ namespace HamLibSharpTest
 			Console.WriteLine ("Read Frequency is: {0}", Rig.FrequencyToString (rig.GetFrequency ()));
 
 			Console.WriteLine ("Attempting to PTT Rig for 1 Sec");
-			rig.SetPtt (PttMode.On);
+			//rig.SetPtt (PttMode.On);
 
 			System.Threading.Thread.Sleep (1000);
 			Console.WriteLine(rig.GetPtt ());

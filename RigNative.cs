@@ -195,6 +195,9 @@ namespace HamLibSharp
 		[DllImport (HamLib.dllName)]
 		private static extern RigError rig_get_vfo (IntPtr rig, out int vfo);
 
+		[DllImport (HamLib.dllName, EntryPoint = "rig_set_debug")]
+		public static extern void SetDebugLevel (RigDebugLevel debug_level);
+
 		[DllImport (HamLib.dllName, EntryPoint = "rigerror")]
 		private static extern IntPtr rigerror (int errnum);
 
