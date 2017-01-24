@@ -582,6 +582,7 @@ namespace HamLibSharp
 
 				// wait for taskQueue thread to exit
 				thread.Join ();
+				thread = null;
 			}
 		}
 
@@ -605,7 +606,6 @@ namespace HamLibSharp
 					commErrorClose = true;
 				}
 			}
-			thread = null;
 		}
 
 		/// <summary>
