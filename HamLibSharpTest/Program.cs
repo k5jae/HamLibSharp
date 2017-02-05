@@ -32,13 +32,13 @@ namespace HamLibSharpTest
 		public static void Main (string[] args)
 		{
 			//var rigName = "Dummy";
-			//var serialPort = string.Empty;
+			//var port = string.Empty;
 
 			//var rigName = "FT-857";
-			//var serialPort = "/dev/ttyUSB0";
+			//var port = "/dev/ttyUSB0";
 
 			var rigName = "PiHPSDR";
-			var serialPort = "127.0.0.1:19090";
+			var port = "127.0.0.1:19090";
 
 			Console.WriteLine("HamLib Native Library Version: {0}", HamLib.NativeVersion);
 			Console.WriteLine("HamLib Managed Library Version: {0}", HamLib.ManagedVersion);
@@ -48,19 +48,21 @@ namespace HamLibSharpTest
 			Console.WriteLine ("Press Enter to continue or CTRL+C to exit");
 			Console.ReadLine ();
 
-			Console.WriteLine ("Attempting to open: {0} at port: {1}", rigName, serialPort);
+			Console.WriteLine ("Attempting to open: {0} at port: {1}", rigName, port);
 
-			HamLib.SetDebugLevel (RigDebugLevel.Error);
+			//This will output to console hamlib traces
+			//HamLib.SetDebugLevel (RigDebugLevel.Trace);
 
 			Rig rig = null;
 			try {
 				rig = new Rig (rigName);
-				rig.Open (serialPort);
+				rig.Open (port);
 			} catch (RigException e) {
 				Console.WriteLine ("Unable to Open Rig: {0}", e.Message);
 				return;
 			}
-				
+
+
 			var freqHz = 28350125;
 			Console.WriteLine ("Set Frequency to: {0}", Rig.FrequencyToString (freqHz));
 			rig.SetFrequency (freqHz);
@@ -75,6 +77,36 @@ namespace HamLibSharpTest
 
 			Console.WriteLine ("PTT OFF");
 			rig.SetPtt (PttMode.Off);
+
+			rig.SetLevel (RigLevel.Agc, (int)RigAgcLevel.Off);
+
+			System.Threading.Thread.Sleep (1000);
+
+			int level;
+			rig.GetLevel (RigLevel.Agc, out level);
+			Console.WriteLine ("AGC Level: {0}", level);
+
+			rig.SetLevel (RigLevel.Agc, (int)RigAgcLevel.Superfast);
+			System.Threading.Thread.Sleep (1000);
+			rig.GetLevel (RigLevel.Agc, out level);
+			Console.WriteLine ("AGC Level: {0}", level);
+
+			rig.SetLevel (RigLevel.Agc, (int)RigAgcLevel.Fast);
+			System.Threading.Thread.Sleep (1000);
+			rig.GetLevel (RigLevel.Agc, out level);
+			Console.WriteLine ("AGC Level: {0}", level);
+
+
+			rig.SetLevel (RigLevel.Agc, (int)RigAgcLevel.Medium);
+			System.Threading.Thread.Sleep (1000);
+			rig.GetLevel (RigLevel.Agc, out level);
+			Console.WriteLine ("AGC Level: {0}", level);
+
+			rig.SetLevel (RigLevel.Agc, (int)RigAgcLevel.Slow);
+			System.Threading.Thread.Sleep (1000);
+			rig.GetLevel (RigLevel.Agc, out level);
+			Console.WriteLine ("AGC Level: {0}", level);
+
 
 			while (true) {
 				Console.WriteLine ("Frequency is: {0}", Rig.FrequencyToString (rig.GetFrequency ()));

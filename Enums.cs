@@ -646,6 +646,17 @@ namespace HamLibSharp
 		Poll = 2,
 	}
 
+	public enum RigAgcLevel
+	{
+		Off = 0,
+		Superfast,
+		Fast,
+		Slow,
+		User,
+		Medium,
+		Auto
+	};
+
 	public static class ModeValue
 	{
 		public const int Any = 0;
