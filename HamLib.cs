@@ -124,7 +124,8 @@ namespace HamLibSharp
 
 		public static void Initialize ()
 		{
-			SetDebugLevel (RigDebugLevel.None);
+			//SetDebugLevel (RigDebugLevel.None);
+
 			rig_load_all_backends ();
 
 			rig_list_foreach ((rig_caps, rig_ptr) => {
